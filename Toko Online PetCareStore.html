@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetCare Store - Toko Perlengkapan Hewan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+    <header class="bg-gradient-to-r from-teal-500 to-teal-600 shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-white p-2 rounded-xl shadow-md">
+                        <span class="text-2xl">🐾</span>
+                    </div>
+                    <h1 class="text-2xl font-bold text-white">PetCare Store</h1>
+                </div>
+
+                <nav class="hidden md:flex items-center space-x-6 text-white">
+                    <a href="#" class="hover:text-teal-100 transition font-medium">Home</a>
+                    <a href="#" class="hover:text-teal-100 transition font-medium">Produk</a>
+                    <a href="#" class="hover:text-teal-100 transition font-medium">Tentang</a>
+                    <a href="#" class="hover:text-teal-100 transition font-medium">Kontak</a>
+                </nav>
+
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleCart()" class="relative bg-white text-teal-600 p-2 rounded-xl hover:bg-teal-50 transition shadow-md">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <span id="cart-badge" class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center animate-pulse"></span>
+                    </button>
+
+                    <button onclick="toggleMenu()" class="md:hidden text-white bg-teal-600 p-2 rounded-lg hover:bg-teal-700 transition">
+                        <svg id="menu-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <nav id="mobile-menu" class="hidden md:hidden mt-4 pb-4 space-y-2 border-t border-teal-400 pt-4">
+                <a href="#" class="block text-white hover:bg-teal-600 rounded-lg px-3 py-2 transition font-medium">Home</a>
+                <a href="#" class="block text-white hover:bg-teal-600 rounded-lg px-3 py-2 transition font-medium">Produk</a>
+                <a href="#" class="block text-white hover:bg-teal-600 rounded-lg px-3 py-2 transition font-medium">Tentang</a>
+                <a href="#" class="block text-white hover:bg-teal-600 rounded-lg px-3 py-2 transition font-medium">Kontak</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 text-white py-16 px-4 shadow-lg">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-4 drop-shadow-lg">
+                Perlengkapan Hewan Peliharaan Lengkap
+            </h2>
+            <p class="text-xl md:text-2xl text-orange-50">Semua Kebutuhan Hewan Kesayangan Anda Ada Di Sini</p>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-12">
+        <div class="flex items-center justify-between mb-8">
+            <h3 class="text-3xl font-bold text-gray-800">Paling Populer</h3>
+            <div class="text-sm text-gray-600 bg-white px-4 py-2 rounded-full shadow">
+                <span id="product-count">30</span> Produk
+            </div>
+        </div>
+
+        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+    </div>
+
+    <div id="cart-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 backdrop-blur-sm" onclick="toggleCart()">
+        <div class="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl overflow-y-auto" onclick="event.stopPropagation()">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-6 pb-4 border-b">
+                    <h3 class="text-2xl font-bold text-gray-800">Keranjang Belanja</h3>
+                    <button onclick="toggleCart()" class="text-gray-500 hover:text-gray-700 bg-gray-100 p-2 rounded-lg hover:bg-gray-200 transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div id="cart-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-gradient-to-r from-gray-800 to-gray-900 text-white py-12 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center">
+                <div class="flex items-center justify-center space-x-2 mb-4">
+                    <span class="text-3xl">🐾</span>
+                    <h3 class="text-2xl font-bold">PetCare Store</h3>
+                </div>
+                <p class="text-gray-400 mb-2">© 2025 PetCare Store. Semua hak dilindungi.</p>
+                <p class="text-gray-500">Toko perlengkapan hewan peliharaan terpercaya</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        var products = [{
+            id: 1,
+            name: "Mainan Tikus berbunyi untuk kucing",
+            price: 25000,
+            image: "https://lh3.googleusercontent.com/DC_0Y9IMmwKPFc29DK7DLWqitjdy-9RVHmK_JJLzx4CIDJ9fKr3MPkuiNlw9f5VoaveYx1syDpl7z1gfDZhrhYc",
+            category: "Mainan"
+        }, {
+            id: 2,
+            name: "UFO Interaktif Toy",
+            price: 150000,
+            image: "https://down-id.img.susercontent.com/file/sg-11134201-7reql-m1z7i3kicwl3f2",
+            category: "Mainan"
+        }, {
+            id: 3,
+            name: "Pet Carrier Backpack",
+            price: 280000,
+            image: "https://tse1.mm.bing.net/th/id/OIP.luU6pGIsr0LGxu8ZC07iGQHaHa?pid=Api&P=0&h=180",
+            category: "Aksesori"
+        }, {
+            id: 4,
+            name: "Tempat Tidur Hewan Premium",
+            price: 350000,
+            image: "https://down-id.img.susercontent.com/file/sg-11134201-7rdxi-lzk7xol78zd239",
+            category: "Tempat Tidur"
+        }, {
+            id: 5,
+            name: "Sisir & Sikat 2 in 1",
+            price: 75000,
+            image: "https://p16-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/img/VqbcmM/2021/6/15/bc20293f-224b-4ff7-aa21-e557bffad407.png~tplv-aphluv4xwc-white-pad-v1:1600:1600.jpeg?lk3s=0ccea506&x-expires=1764086619&x-signature=feoa7I%2FX8L371ZlGH1gcvF7MQGM%3D&x-signature-webp=grjyMbcAKd5jvXrm2TRnBLuH9uo%3D",
+            category: "Grooming"
+        }, {
+            id: 6,
+            name: "Kondisioner Aromaterapi",
+            price: 85000,
+            image: "https://p16-images-common-sign-sg.tokopedia-static.net/tos-maliva-i-o3syd03w52-us/f7969584d92545b3a6f371e51fc7f232~tplv-o3syd03w52-resize-jpeg:1600:1600.jpeg?lk3s=0ccea506&x-expires=1764083244&x-signature=fZWX9Wy26%2BrAY93umrSMIs1GFBo%3D&x-signature-webp=19TzoeY345bFGHUmbsegzsc66Lc%3D",
+            category: "Perawatan"
+        }, {
+            id: 7,
+            name: "Gunting Kuku Premium",
+            price: 45000,
+            image: "https://lh6.googleusercontent.com/n7DO-9pgW26VRgwmzrz3yBL-1nOI2DHrnQyv9HtwrgA3tgYoN8GeU3rKMXf_r2wU52gbvMlUAhqx9Xub2Q2HxVY",
+            category: "Grooming"
+        }, {
+            id: 8,
+            name: "Shampoo Color Enhancer",
+            price: 95000,
+            image: "https://p16-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/img/VqbcmM/2021/9/2/257cbe42-a2f9-42b8-88e2-c988cf05e112.png~tplv-aphluv4xwc-white-pad-v1:1600:1600.jpeg?lk3s=0ccea506&x-expires=1764083309&x-signature=pO20J1MRKWVBR%2F%2FODdz4DbH1v%2Fg%3D&x-signature-webp=af0LDa7xq%2B6aGynxoTsA65orA0c%3D",
+            category: "Perawatan"
+        }, {
+            id: 9,
+            name: "Mainan Treat Dispenser untuk Anjing",
+            price: 120000,
+            image: "https://p16-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/img/hDjmkQ/2022/3/5/ff28001f-e555-4176-a3af-7af13295cf97.jpg~tplv-aphluv4xwc-white-pad-v1:1600:1600.jpeg?lk3s=0ccea506&x-expires=1764087326&x-signature=z5IggqL1SYqAkP9TnvcmH2t%2FRj4%3D&x-signature-webp=4LdA5mtP2ESFR4TqSuwNslNDoiw%3D",
+            category: "Mainan"
+        }, {
+            id: 10,
+            name: "Tempat Makan Otomatis untuk Anjing",
+            price: 185000,
+            image: "https://p16-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/045f8b9146194533828a78610ef901e8~tplv-aphluv4xwc-white-pad-v1:1600:1600.jpeg?lk3s=0ccea506&x-expires=1764087375&x-signature=WmYhkkHuE0fwdb%2BA5IGBqWtCOnI%3D&x-signature-webp=2ZeZMl8IVDnHDX20dPJMfU2qhUw%3D",
+            category: "Tempat Makan"
+        }, {
+            id: 11,
+            name: "Dispenser Makanan Otomatis Kucing",
+            price: 165000,
+            image: "https://p16-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/2be2cd9b4c0d40ff84f493787a2ed3df~tplv-aphluv4xwc-white-pad-v1:1600:1600.jpeg?lk3s=0ccea506&x-expires=1764087424&x-signature=dW9wgQbGaTYIcLZiGLw03JxL%2BC0%3D&x-signature-webp=pJ5U8qer2E8akFYjht%2B7TLaX3sk%3D",
+            category: "Tempat Makan"
+        }, {
+            id: 12,
+            name: "Tempat Makan Double Anti-Semut",
+            price: 55000,
+            image: "https://p16-images-common-sign-sg.tokopedia-static.net/tos-maliva-i-o3syd03w52-us/8159136d8a4f448caebfa37db2e211e8~tplv-o3syd03w52-resize-jpeg:1600:1600.jpeg?lk3s=0ccea506&x-expires=1764087463&x-signature=1RXQdTwLNrYR0AulNijAXawd%2FH4%3D&x-signature-webp=%2BYugFTPb1KOmdfJA7aXTtQo3stQ%3D",
+            category: "Tempat Makan"
+        }, {
+            id: 13,
+            name: "Tempat Pakan Burung Gantung",
+            price: 35000,
+            image: "https://p16-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/img/hDjmkQ/2022/8/1/597e4e9e-aa05-4fa3-8245-38b9f3901219.jpg~tplv-aphluv4xwc-white-pad-v1:1600:1600.jpeg?lk3s=0ccea506&x-expires=1764087505&x-signature=zYVqdUFqfacNwXBM0hBmqGFo5aM%3D&x-signature-webp=uepuXlBpCao%2FKBcZk2Oea9rlaJs%3D",
+            category: "Burung"
+        }, {
+            id: 14,
+            name: "Papan Cakar Jumbo 55cm",
+            price: 145000,
+            image: "https://p16-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/img/VqbcmM/2024/11/12/96863a9e-6695-449b-b8e5-deb129491c5f.jpg~tplv-aphluv4xwc-white-pad-v1:1600:1600.jpeg?lk3s=0ccea506&x-expires=1764087549&x-signature=K1VReANspBz9Vbaqv4XYufjNQMc%3D&x-signature-webp=QZC3Mnc4QiHzPTL4t%2BRshM3mEkg%3D",
+            category: "Mainan"
+        }, {
+            id: 15,
+            name: "Wadah Biji-bijian Kayu untuk Burung",
+            price: 65000,
+            image: "https://p16-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/img/VqbcmM/2020/8/2/5f6546f2-7873-4721-b4d5-dfdec392183d.jpg~tplv-aphluv4xwc-white-pad-v1:1600:1600.jpeg?lk3s=0ccea506&x-expires=1764087577&x-signature=ORqG8tL7oRYHKgEEOrsu0LnWyzU%3D&x-signature-webp=KPAVyJvFHHqeBC76j78g%2FGO8ZPQ%3D",
+            category: "Burung"
+        }, {
+            id: 16,
+            name: "Botol Minum Portabel Hewan",
+            price: 95000,
+            image: "https://p16-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/img/hDjmkQ/2021/4/16/5343cc4a-43a1-44b7-bdeb-3bdf8e55697d.jpg~tplv-aphluv4xwc-white-pad-v1:1600:1600.jpeg?lk3s=0ccea506&x-expires=1764087610&x-signature=roULWC9B8uIBxlEVXKabGKeO2Es%3D&x-signature-webp=1SYRXKfBMR%2BFmJ%2BNkYL85dGG1%2FY%3D",
+            category: "Aksesori"
+        }, {
+            id: 17,
+            name: "Tali Tuntun & Kalung Set",
+            price: 125000,
+            image: "https://p19-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/img/VqbcmM/2024/6/24/edb3a50d-edbb-4681-a686-05048691accd.jpg~tplv-aphluv4xwc-white-pad-v1:1600:1600.jpeg?lk3s=0ccea506&x-expires=1764087669&x-signature=WXd2HI60R6ERsGD3khIrOgGPXak%3D&x-signature-webp=eJ4FnLhQcsyADAVIF37PgCSLzrw%3D",
+            category: "Aksesori"
+        }, {
+            id: 18,
+            name: "Kaos Hewan Motif Lucu",
+            price: 45000,
+            image: "https://p19-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/img/VqbcmM/2021/3/28/2946280f-6228-40c9-aa1b-a54577006ec2.png~tplv-aphluv4xwc-white-pad-v1:1600:1600.jpeg?lk3s=0ccea506&x-expires=1764087722&x-signature=z3cn5bA9QIa%2FrHGQjGFm%2F8u409A%3D&x-signature-webp=g%2F0N44sPLDAUToSni1s%2BNf131bE%3D",
+            category: "Pakaian"
+        }, {
+            id: 19,
+            name: "Toilet Pasir Kucing Mansura",
+            price: 110000,
+            image: "https://p16-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/img/VqbcmM/2020/12/22/b6e4bf2b-0677-4542-b748-c95a202fa936.jpg~tplv-aphluv4xwc-white-pad-v1:1600:1600.jpeg?lk3s=0ccea506&x-expires=1764087769&x-signature=uoVASJ5%2FHb26wIoEWtNQ41iifFg%3D&x-signature-webp=T2Fb7a67CDXMYHyPg0dczlglCRA%3D",
+            category: "Toilet"
+        }, {
+            id: 20,
+            name: "Bak Tempat Pasir Kucing Toilet Cat Litter Box Size Large",
+            price: 122000,
+            image: "https://p16-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/img/product-1/2020/8/13/3509255/3509255_52550726-0f29-4de0-862f-5d23be1e3245_1024_1024~tplv-aphluv4xwc-white-pad-v1:1600:1600.jpeg?lk3s=0ccea506&x-expires=1764091806&x-signature=2O2lAPHgoNhy7MJN1MPcg13Xihc%3D&x-signature-webp=jPbgVISiu6HoLZHVUAxbkGogl%2BY%3D",
+            category: "Toilet"
+        }, {
+            id: 21,
+            name: "Gunting bulu elektrik (clipper) untuk anjing",
+            price: 295000,
+            image: "https://lzd-img-global.slatic.net/g/ff/kf/S18373d10f33848799346262c827ecc585.jpg_720x720q80.jpg",
+            category: "Trimming"
+        }, {
+            id: 22,
+            name: "Gunting Cukur Anjing / Kucing Kandila Gunting Sasak Bulu",
+            price: 166000,
+            image: "https://p16-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/img/VqbcmM/2022/11/16/c6a37b66-ea94-4f75-85ad-cf345198f8bc.jpg~tplv-aphluv4xwc-resize-jpeg:700:0.jpeg?lk3s=0ccea506&x-expires=1764092068&x-signature=KsYHHpvzQVwg8aWAxw4wgDMwC4Q%3D&x-signature-webp=loop4FTrabPuuWlShec4cxc73SY%3D",
+            category: "Trimming"
+        }, {
+            id: 23,
+            name: "Professional Groomer Oral Hygiene Kit",
+            price: 45000,
+            image: "https://p16-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/img/VqbcmM/2023/9/7/372edae7-e36f-4fd4-802c-30eec8b80569.jpg~tplv-aphluv4xwc-white-pad-v1:1600:1600.jpeg?lk3s=0ccea506&x-expires=1764092166&x-signature=e2dhsotGQHuhuUGc1tyoxh9OIoQ%3D&x-signature-webp=OkvdxpPa9O3Gi6cKBIztKEdJkm4%3D",
+            category: "Sikat Gigi"
+        }, {
+            id: 24,
+            name: "Tempat makan (food bowl) dan tempat minum (water bowl)",
+            price: 275000,
+            image: "https://down-id.img.susercontent.com/file/75a2841dd92ab8baa85cd26c90a28dff",
+            category: "Tempat Makan"
+        }, {
+            id: 25,
+            name: "Kandang (cage) untuk hewan kecil seperti hamster atau kelinci",
+            price: 132000,
+            image: "https://p16-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/img/hDjmkQ/2023/10/7/bc221278-4dbd-4845-b93b-5f1d2feea325.jpg~tplv-aphluv4xwc-resize-jpeg:700:0.jpeg?lk3s=0ccea506&x-expires=1764092393&x-signature=K1rQR8BjvvQBC4T9esP%2FwAblllA%3D&x-signature-webp=ZqKVue5U6A5xbCWHISlISfm6g6M%3D",
+            category: "Cage"
+        }, {
+            id: 26,
+            name: "Rantai (chain) dan gelang (harness) untuk anjing besar",
+            price: 129000,
+            image: "https://p16-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/img/VqbcmM/2025/3/18/950b6280-667c-453e-9013-a911f733ec4a.jpg~tplv-aphluv4xwc-white-pad-v1:1600:1600.jpeg?lk3s=0ccea506&x-expires=1764092434&x-signature=EwNglWtLWka%2FzGLOJr4DrV1wOxE%3D&x-signature-webp=EmAsDCf%2FNpil5yAFqbPueDvOxb8%3D",
+            category: "Chain Collar"
+        }, {
+            id: 27,
+            name: "Mainan kunyah (chew toys) untuk anjing",
+            price: 169000,
+            image: "https://p16-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/img/hDjmkQ/2024/8/30/33aa7bf0-57b1-4a9c-bc73-2bb34b5801d3.jpg~tplv-aphluv4xwc-resize-jpeg:700:0.jpeg?lk3s=0ccea506&x-expires=1764092511&x-signature=ogph77mBgRvLWBAke%2FuJlLfMcuw%3D&x-signature-webp=VohOeQTBZCss14oEUfO2QSATMeI%3D",
+            category: "Toys"
+        }, {
+            id: 28,
+            name: "Alat penjepit (litter scoop) untuk kucing",
+            price: 117000,
+            image: "https://p16-images-common-sign-sg.tokopedia-static.net/tos-maliva-i-o3syd03w52-us/de3a4dbb6678429ebd4f7942944d43c3~tplv-o3syd03w52-resize-jpeg:1600:1600.jpeg?lk3s=0ccea506&x-expires=1764092566&x-signature=jDX43UKtE9%2FVcyPpavBrPbCJXJU%3D&x-signature-webp=GnvFTnQA9UZxOBTnXCVuY%2FQzeIc%3D",
+            category: "Penjepit"
+        }, {
+            id: 29,
+            name: "Sangkar Burung",
+            price: 80000,
+            image: "https://p16-images-common-sign-sg.tokopedia-static.net/tos-maliva-i-o3syd03w52-us/e64b68f050044fcf9439d3a1135e033e~tplv-o3syd03w52-resize-jpeg:700:0.jpeg?lk3s=0ccea506&x-expires=1764092614&x-signature=zSB6fH%2BvfH%2BWnGtGodTanG4pEUg%3D&x-signature-webp=1svsRc1bPhKh6NNh8CA4fVvQV3w%3D",
+            category: "Cage"
+        }, {
+            id: 30,
+            name: "Kandang Hamster",
+            price: 63000,
+            image: "https://p16-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/img/VqbcmM/2024/11/16/a17fc531-6085-420a-8503-756c56b5da7c.jpg~tplv-aphluv4xwc-white-pad-v1:1600:1600.jpeg?lk3s=0ccea506&x-expires=1764092703&x-signature=5XwwcwOOViYerQUWK0Yzq2qEu9s%3D&x-signature-webp=5o1%2Bq5tQmX3U4DvhbiABCbDaCSU%3D",
+            category: "Cage"
+        }];
+
+        var cart = [];
+
+        function init() {
+            renderProducts();
+            updateCart();
+        }
+
+        function renderProducts() {
+            var grid = document.getElementById('products-grid');
+            var html = '';
+
+            for (var i = 0; i < products.length; i++) {
+                var product = products[i];
+                html += '<div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">';
+                html += '<div class="aspect-square overflow-hidden bg-gray-100">';
+                html += '<img src="' + product.image + '" alt="' + product.name + '" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">';
+                html += '</div>';
+                html += '<div class="p-5">';
+                html += '<span class="text-xs font-semibold text-teal-600 bg-teal-50 px-2 py-1 rounded-full">' + product.category + '</span>';
+                html += '<h4 class="font-bold text-gray-800 mt-3 mb-2 text-lg line-clamp-2">' + product.name + '</h4>';
+                html += '<p class="text-teal-600 font-bold text-xl mb-4">Rp ' + product.price.toLocaleString('id-ID') + '</p>';
+                html += '<button onclick="addToCart(' + product.id + ')" class="w-full bg-teal-500 text-white py-3 rounded-lg hover:bg-teal-600 transition-all font-semibold flex items-center justify-center space-x-2">';
+                html += '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
+                html += '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>';
+                html += '</svg>';
+                html += '<span>Tambah ke Keranjang</span>';
+                html += '</button>';
+                html += '</div>';
+                html += '</div>';
+            }
+
+            grid.innerHTML = html;
+        }
+
+        function addToCart(productId) {
+            var product = null;
+            for (var i = 0; i < products.length; i++) {
+                if (products[i].id === productId) {
+                    product = products[i];
+                    break;
+                }
+            }
+
+            var existingItem = null;
+            for (var i = 0; i < cart.length; i++) {
+                if (cart[i].id === productId) {
+                    existingItem = cart[i];
+                    break;
+                }
+            }
+
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    category: product.category,
+                    quantity: 1
+                });
+            }
+
+            updateCart();
+        }
+
+        function updateCart() {
+            var totalItems = 0;
+            var totalPrice = 0;
+
+            for (var i = 0; i < cart.length; i++) {
+                totalItems += cart[i].quantity;
+                totalPrice += cart[i].price * cart[i].quantity;
+            }
+
+            var badge = document.getElementById('cart-badge');
+            if (totalItems > 0) {
+                badge.textContent = totalItems;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+
+            var cartContent = document.getElementById('cart-content');
+
+            if (cart.length === 0) {
+                cartContent.innerHTML = '<div class="text-center py-16"><div class="bg-gray-100 w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-16 h-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg></div><p class="text-gray-500 text-lg">Keranjang Anda masih kosong</p><p class="text-gray-400 text-sm mt-2">Mulai belanja sekarang!</p></div>';
+            } else {
+                var html = '<div class="space-y-4 mb-6">';
+
+                for (var i = 0; i < cart.length; i++) {
+                    var item = cart[i];
+                    html += '<div class="flex items-center space-x-4 border-b pb-4 bg-gray-50 p-3 rounded-lg">';
+                    html += '<img src="' + item.image + '" alt="' + item.name + '" class="w-20 h-20 object-cover rounded-lg shadow">';
+                    html += '<div class="flex-1 min-w-0">';
+                    html += '<h4 class="font-semibold text-gray-800 text-sm truncate">' + item.name + '</h4>';
+                    html += '<p class="text-teal-600 font-bold mt-1">Rp ' + item.price.toLocaleString('id-ID') + '</p>';
+                    html += '<div class="flex items-center space-x-2 mt-2">';
+                    html += '<button onclick="updateQuantity(' + item.id + ', -1)" class="bg-gray-200 p-1 rounded hover:bg-gray-300 transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg></button>';
+                    html += '<span class="font-semibold text-gray-800 px-2">' + item.quantity + '</span>';
+                    html += '<button onclick="updateQuantity(' + item.id + ', 1)" class="bg-gray-200 p-1 rounded hover:bg-gray-300 transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg></button>';
+                    html += '<button onclick="removeFromCart(' + item.id + ')" class="ml-auto text-red-500 hover:text-red-700 bg-red-50 p-1 rounded hover:bg-red-100 transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>';
+                    html += '</div></div></div>';
+                }
+
+                html += '</div>';
+                html += '<div class="border-t pt-6 bg-gray-50 -mx-6 px-6 pb-6">';
+                html += '<div class="space-y-2 mb-4">';
+                html += '<div class="flex justify-between text-gray-600"><span>Subtotal (' + totalItems + ' item)</span><span>Rp ' + totalPrice.toLocaleString('id-ID') + '</span></div>';
+                html += '<div class="flex justify-between text-gray-600"><span>Ongkir</span><span class="text-green-600 font-semibold">GRATIS</span></div>';
+                html += '</div>';
+                html += '<div class="flex justify-between text-2xl font-bold mb-6 pt-4 border-t"><span>Total:</span><span class="text-teal-600">Rp ' + totalPrice.toLocaleString('id-ID') + '</span></div>';
+                html += '<button class="w-full bg-gradient-to-r from-teal-500 to-teal-600 text-white py-4 rounded-xl hover:from-teal-600 hover:to-teal-700 transition-all font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">Checkout Sekarang</button>';
+                html += '</div>';
+
+                cartContent.innerHTML = html;
+            }
+        }
+
+        function updateQuantity(productId, change) {
+            for (var i = 0; i < cart.length; i++) {
+                if (cart[i].id === productId) {
+                    cart[i].quantity += change;
+                    if (cart[i].quantity <= 0) {
+                        removeFromCart(productId);
+                        return;
+                    }
+                    break;
+                }
+            }
+            updateCart();
+        }
+
+        function removeFromCart(productId) {
+            var newCart = [];
+            for (var i = 0; i < cart.length; i++) {
+                if (cart[i].id !== productId) {
+                    newCart.push(cart[i]);
+                }
+            }
+            cart = newCart;
+            updateCart();
+        }
+
+        function toggleCart() {
+            var overlay = document.getElementById('cart-overlay');
+            overlay.classList.toggle('hidden');
+        }
+
+        function toggleMenu() {
+            var menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        init();
+    </script>
+</body>
+
+</html>
